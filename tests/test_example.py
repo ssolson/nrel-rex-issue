@@ -17,7 +17,6 @@ class TestExample(unittest.TestCase):
         pass
 
     def test_run_energy_period(self):
-       
         with WaveX(self.wave_file, hsds=True) as rex_waves:
             data_raw = rex_waves.get_lat_lon_df('energy_period',(43.489171,-125.152137))
             print(data_raw)
@@ -27,6 +26,20 @@ class TestExample(unittest.TestCase):
             data_raw = rex_waves.get_lat_lon_df('directional_wave_spectrum',(43.489171,-125.152137))
             print(data_raw)
 
+    def test_simple_retrieval_energy_period(self):
+        with WaveX(self.wave_file, hsds=True) as rex_waves:
+            data = rex_waves['energy_period', 0]
+            print(data.shape)
+
+    def test_simple_retrieval_spectrum_small(self):
+        with WaveX(self.wave_file, hsds=True) as rex_waves:
+            data = rex_waves['directional_wave_spectrum', 0:5, :, :, 0]
+            print(data.shape)
+
+    def test_simple_retrieval_spectrum_big(self):
+        with WaveX(self.wave_file, hsds=True) as rex_waves:
+            data = rex_waves['directional_wave_spectrum', :, :, :, 0]
+            print(data.shape)
 
 if __name__ == '__main__':
     unittest.main()
