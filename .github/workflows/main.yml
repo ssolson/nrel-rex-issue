@@ -2,10 +2,10 @@ name: Py 3.8 | Windows
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
   conda-build:
