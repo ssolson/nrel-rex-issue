@@ -1,0 +1,51 @@
+name: Py 3.8 | Windows
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  conda-build:
+    name: conda-${{ matrix.os }}/${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # os: ["windows-latest", "ubuntu-latest", "macos-latest"]
+        os: ["windows-latest"]
+        # python-version: [3.7, 3.8, 3.9]
+        python-version: [3.8]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Conda
+        uses: s-weigand/setup-conda@v1
+        with:
+          activate-conda: false
+          conda-channels: conda-forge
+
+      - name: Python ${{ matrix.python-version }}
+        shell: bash -l {0}
+        run: |
+          conda create --name TEST python=${{ matrix.python-version }} pip pytest nrel-rex  --strict-channel-priority
+          source activate TEST
+          export PATH="${CONDA_PREFIX}/bin:${CONDA_PREFIX}/Library/bin:$PATH" # so setup.py finds nc-config
+          pip install -e . --no-deps --force-reinstall
+
+      - name: Tests
+        shell: bash -l {0}
+        run: |
+          source activate TEST
+          python -m pip install --upgrade pip wheel
+          pip install pytest
+          pip install .
+
+      - name: Run pytest
+        shell: bash -l {0}
+        run: |
+          source activate TEST
+          pytest tests
