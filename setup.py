@@ -3,7 +3,7 @@ from distutils.core import Extension
 import os
 import re
 
-DISTNAME = 'mhkit'
+DISTNAME = 'nrel-issue'
 PACKAGES = find_packages()
 EXTENSIONS = []
 DESCRIPTION = 'Test to run nrel-rex'
